@@ -1,1 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>hCaptcha Example</title>
+  <!-- hCaptcha client-side script -->
+  <script src="https://hcaptcha.com/1/api.js" async defer></script>
+</head>
+<body>
+
+<h1>Security Check</h1>
+<p>Please verify you’re human by completing the hCaptcha below:</p>
+
+<form action="verify.php" method="POST">
+  <!-- This is where we put the hCaptcha widget -->
+  <div class="h-captcha" data-sitekey="ES_89aec60e04a34b69963632f56421ebfb"></div>
+
+  <br>
+  <button type="submit">Verify & Continue</button>
+</form>
+
+</body>
+</html>
 
