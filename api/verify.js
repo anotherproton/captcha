@@ -1,50 +1,55 @@
-
 // api/verify.js
 export default async function handler(req, res) {
+  // 1. Only allow POST
   if (req.method !== 'POST') {
-    // Only allow POST
     return res.status(405).send('Method Not Allowed');
   }
 
-  // 1. Extract hCaptcha token from form
+  // 2. Extract the hCaptcha token from the form
+  //    The name must match the field name in your HTML ("h-captcha-response")
   const token = req.body['h-captcha-response'];
   if (!token) {
-    return res.status(400).send('hCaptcha token not found. Please complete the captcha.');
+    return res.status(400).send('Missing hCaptcha token. Please complete the captcha.');
   }
 
-  // 2. Your hCaptcha Secret Key
-  const secretKey = process.env.ES_89aec60e04a34b69963632f56421ebfb; 
-  // Make sure you've set this in your Vercel project environment variables
-  // e.g. Vercel Dashboard > Settings > Environment Variables
+  // 3. Your hCaptcha Secret Key
+  //    Make sure you've set this in Vercel's environment variables (Settings → Environment Variables).
+  const secretKey = ES_89aec60e04a34b69963632f56421ebfb;
+  if (!secretKey) {
+    console.error('No hCaptcha secret key found in environment variables!');
+    return res.status(500).send('Server misconfiguration. Missing secret key.');
+  }
 
-  // 3. Verify with hCaptcha
   try {
+    // 4. Send a POST to hCaptcha's verification endpoint
     const verifyUrl = 'https://hcaptcha.com/siteverify';
-
     const response = await fetch(verifyUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
       body: new URLSearchParams({
         secret: secretKey,
         response: token
-        // You can optionally pass 'remoteip': req.headers['x-forwarded-for'] or similar
+        // Optionally: 'remoteip': req.headers['x-forwarded-for'] or similar
       })
     });
 
+    // 5. Parse the JSON returned by hCaptcha
     const data = await response.json();
 
+    // 6. Check if "success" is true
     if (data.success) {
-      // hCaptcha passed!
-      // You can redirect or return a success message
-      return res.redirect('https://wemust.com/'); 
-      // Make sure you actually have a "protected.html" in your "public" folder
+      // hCaptcha is valid. Redirect or send a success message.
+      return res.redirect('https://wemust.com/');
     } else {
-      // hCaptcha failed. Possibly a bot, or an error
+      // hCaptcha failed. Possibly a bot or an error in the token.
+      console.log('hCaptcha verification error:', data);
       return res.status(401).send('CAPTCHA verification failed. Please try again.');
     }
 
   } catch (err) {
     console.error('Error verifying hCaptcha:', err);
-    return res.status(500).send('Server error verifying hCaptcha.');
+    return res.status(500).send('Internal server error during hCaptcha verification.');
   }
 }
