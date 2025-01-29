@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   // 3. Your hCaptcha Secret Key
   //    Make sure you've set this in Vercel's environment variables (Settings → Environment Variables).
-  const secretKey = ES_89aec60e04a34b69963632f56421ebfb;
+  const secretKey = process.env.HCAPTCHA_SECRET_KEY;
   if (!secretKey) {
     console.error('No hCaptcha secret key found in environment variables!');
     return res.status(500).send('Server misconfiguration. Missing secret key.');
