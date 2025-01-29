@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($responseData && isset($responseData['success']) && $responseData['success'] === true) {
         // The hCaptcha was successfully completed
         // Redirect to the protected content, or do whatever you want
-        header("Location: protected.html");
+        header("Location: https://wemust.com/");
         exit;
     } else {
         // hCaptcha failed: show an error or redirect back to form
